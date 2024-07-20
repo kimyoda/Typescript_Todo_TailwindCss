@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { dummyData } from "./data/todos";
 import { AddTodoForm } from "./components/AddTodoForm";
 import { TodoList } from "./components/TodoList";
 import { TodoSummary } from "./components/TodoSummary";
+import { Todo } from "./types/todo";
 
 function App() {
-  const [todos, setTodos] = useState(dummyData);
+  const [todos, setTodos] = useState(() => {
+    const saveTodos: Todo[] = JSON.parse(localStorage.getItem("todos") || "[]");
+    return saveTodos.length > 0 ? saveTodos : dummyData;
+  });
+
+  // localStorage 로 저장하기
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   const setTodoCompleted = (id: number, completed: boolean) => {
     setTodos((prevTodos) =>
@@ -16,7 +25,8 @@ function App() {
   const addTodo = (title: string) => {
     setTodos((prevTodos) => [
       {
-        id: prevTodos.length + 1,
+        // Date.now 도 왜 괜찮은 지 확인해보기
+        id: Date.now(),
         title,
         completed: false,
       },
