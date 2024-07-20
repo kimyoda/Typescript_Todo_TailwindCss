@@ -1,14 +1,20 @@
+import { Trash2 } from "lucide-react";
 import { Todo } from "../types/todo";
 
 interface TodoItemProps {
   todo: Todo;
   onCompletedChange: (id: number, completed: boolean) => void;
+  onDelete: (id: number) => void;
 }
 
-export const TodoItem = ({ todo, onCompletedChange }: TodoItemProps) => {
+export const TodoItem = ({
+  todo,
+  onCompletedChange,
+  onDelete,
+}: TodoItemProps) => {
   return (
-    <div>
-      <label className="flex items-center gap-2 border rounded-md p-2 border-gray-700 bg-white hover:bg-slate-100">
+    <div className="flex items-center gap-1">
+      <label className="flex items-center gap-2 border rounded-md p-2 border-gray-700 bg-white hover:bg-slate-100 grow">
         <input
           checked={todo.completed}
           onChange={(e) => onCompletedChange(todo.id, e.target.checked)}
@@ -19,6 +25,9 @@ export const TodoItem = ({ todo, onCompletedChange }: TodoItemProps) => {
           {todo.title}
         </span>
       </label>
+      <button onClick={() => onDelete(todo.id)} className="p-2">
+        <Trash2 size={20} className="text-gray-500" />
+      </button>
     </div>
   );
 };
